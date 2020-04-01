@@ -1,6 +1,4 @@
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
+import com.mongodb.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -21,6 +19,9 @@ public class User extends Application {
     private DB LibraryProject = mongo.getDB("LibraryProject");
     private DBCollection UsersCollection = LibraryProject.getCollection("Users");
 
+    private String usernameIn;
+    private String passwordIn;
+
     Stage UserFloorStage;
 
     //Instances of the class
@@ -40,11 +41,14 @@ public class User extends Application {
     }
 
     //Login UI scene
+    private GridPane logInLayout = new GridPane();
+    private Label warning;TextField passIn = new TextField();TextField userIn = new TextField();
+
     public void logInUi(){
         UserFloorStage.setTitle("Log In");
         Scene loggingIn;
         //setting pane and adding all the nodes
-        GridPane logInLayout = new GridPane();
+
         logInLayout.setPadding(new Insets(20, 10, 10, 15));
         logInLayout.setVgap(6);
         logInLayout.setHgap(14);
@@ -60,7 +64,6 @@ public class User extends Application {
         logInLayout.add(userText, 0, 3);
 
         //Username TextField
-        TextField userIn = new TextField();
         userIn.setPromptText("Username");
         logInLayout.add(userIn,1,3);
 
@@ -69,9 +72,13 @@ public class User extends Application {
         logInLayout.add(passText, 0, 4);
 
         //Password TextField
-        TextField passIn = new TextField();
+
         passIn.setPromptText("Password");
         logInLayout.add(passIn,1,4);
+
+        //Warning Label is added to the frame
+        warning = new Label("");
+        logInLayout.add(warning,1,5);
 
         //LogInButton
         Button logInEvent = new Button("Log In");
@@ -95,18 +102,58 @@ public class User extends Application {
         UserFloorStage.show();
     }
 
+    //Log In Validation Section -------
+    private void logInValidation(ActionEvent event){
+        setUsernameIn(userIn.getText());setPasswordIn(passIn.getText());
+        if (userExist(getUsernameIn(),getPasswordIn())){
+            UserFloorStage.close();
+        }
+        else {
+          warning.setText("Incorrect Username/Password");
+            userIn.setText("");
+            passIn.setText("");
+        }
+    }
+    private boolean userExist(String userINPUT, String passINPUT){
+        boolean checkResult = false;
+        BasicDBObject QueryUser = new BasicDBObject("Username", userINPUT);
+        Cursor C = UsersCollection.find(QueryUser);
+        if(C.hasNext()){
+            DBObject CLocation = C.next();
+            String retrievedPassword = (String) CLocation.get("Password");
+            if(retrievedPassword.equals(passINPUT)){
+                String fname = (String) CLocation.get("First Name");
+                String lname = (String) CLocation.get("Last Name");
+                System.out.println(fname+" "+lname);
+                checkResult = true;
+            }
+        }
+        return checkResult;
+    }
+    // End of Validation Section --------
+
     public void registrationHandler(){
         System.out.println("hello");
     }
-    private void logInValidation(ActionEvent event){
-
-    }
-    private boolean userExist(){
-        return false;
-    }
-
     //Registration UI Scene
     public void registrationUI(){
 
     }
+
+
+
+    private void setUsernameIn(String Input) {
+
+        usernameIn = Input;
+    }
+    private void setPasswordIn(String Input){
+        passwordIn = Input;
+    }
+    public String getUsernameIn(){
+        return usernameIn;
+    }
+    private String getPasswordIn(){
+        return passwordIn;
+    }
+
 }
