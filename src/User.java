@@ -14,8 +14,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import javax.swing.*;
-
 public class User extends Application {
     //Instances
     private MongoClient mongo = new MongoClient("Localhost", 27017);
@@ -176,7 +174,7 @@ public class User extends Application {
         GridPane.setHalignment(registerButton,HPos.RIGHT);
         GridPane.setValignment(registerButton,VPos.BOTTOM);
         registerButton.setPadding(new Insets(10,10,10,10));
-        registrationLayout.add(registerButton,0,7);
+        registrationLayout.addRow(7,registerButton);
         registerButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -197,6 +195,7 @@ public class User extends Application {
                 }
             }
         });
+
 
         //Setting the scene up
         Scene registerNow = new Scene(registrationLayout,360,300);
