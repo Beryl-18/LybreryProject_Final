@@ -15,19 +15,16 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class User extends Application {
+    //Instances
     private MongoClient mongo = new MongoClient("Localhost", 27017);
     private DB LibraryProject = mongo.getDB("LibraryProject");
     private DBCollection UsersCollection = LibraryProject.getCollection("Users");
-
     private String usernameIn;
     private String passwordIn;
-
     Stage UserFloorStage;
-
-    //Instances of the class
     private double userID;
-    private static String[] Username = new String[2];
 
+    //Behaviours
     public static void main(String[] args){launch(args);}
     @Override
     public void start(Stage primaryStage) {
@@ -125,6 +122,7 @@ public class User extends Application {
                 String fname = (String) CLocation.get("First Name");
                 String lname = (String) CLocation.get("Last Name");
                 System.out.println(fname+" "+lname);
+                setUserID((double)CLocation.get("_id"));
                 checkResult = true;
             }
         }
@@ -142,12 +140,20 @@ public class User extends Application {
 
 
 
+    //Mutators
     private void setUsernameIn(String Input) {
-
         usernameIn = Input;
     }
     private void setPasswordIn(String Input){
         passwordIn = Input;
+    }
+    private void setUserID(double Input){
+        userID = Input;
+    }
+
+    //Accessors
+    public double getUserID(){
+        return userID;
     }
     public String getUsernameIn(){
         return usernameIn;
