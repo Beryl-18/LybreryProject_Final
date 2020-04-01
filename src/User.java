@@ -14,6 +14,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javax.swing.*;
+
 public class User extends Application {
     //Instances
     private MongoClient mongo = new MongoClient("Localhost", 27017);
@@ -79,6 +81,7 @@ public class User extends Application {
 
         //LogInButton
         Button logInEvent = new Button("Log In");
+
         logInLayout.add(logInEvent,1,6);
         logInEvent.setOnAction(event -> logInValidation(event) );
 
@@ -86,12 +89,7 @@ public class User extends Application {
         Button RegisterEvent = new Button("Register");
         GridPane.setHalignment(RegisterEvent,HPos.RIGHT);
         logInLayout.add(RegisterEvent,1,6);
-        RegisterEvent.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent event){
-                registrationHandler();
-            }
-        });
+        RegisterEvent.setOnAction(e-> registrationUI());
 
         //Setting the scene on the stage
         loggingIn = new Scene(logInLayout, 400, 200);
@@ -113,8 +111,8 @@ public class User extends Application {
     }
     private boolean userExist(String userINPUT, String passINPUT){
         boolean checkResult = false;
-        BasicDBObject QueryUser = new BasicDBObject("Username", userINPUT);
-        Cursor C = UsersCollection.find(QueryUser);
+        BasicDBObject queryUser = new BasicDBObject("Username", userINPUT);
+        Cursor C = UsersCollection.find(queryUser);
         if(C.hasNext()){
             DBObject CLocation = C.next();
             String retrievedPassword = (String) CLocation.get("Password");
@@ -130,15 +128,115 @@ public class User extends Application {
     }
     // End of Validation Section --------
 
-    public void registrationHandler(){
-        System.out.println("hello");
-    }
+    //Start of Registration Procedure
     //Registration UI Scene
     public void registrationUI(){
+        UserFloorStage.setTitle("Registration");
+        GridPane registrationLayout = new GridPane();
+        registrationLayout.setPadding(new Insets(20,20,20,20));
+        registrationLayout.setVgap(7);
+        registrationLayout.setHgap(7);
+
+        //Registration Text
+        Label registerTitle = new Label("Register to be a Member");
+        registerTitle.setFont(new Font("Calibri",15));
+        GridPane.setHalignment(registerTitle,HPos.CENTER);
+        registrationLayout.add(registerTitle,0,0,2,1);
+
+        //First Name
+        Label firstN = new Label("First Name");
+        TextField firstNameIn = new TextField();
+        firstNameIn.setPromptText("First Name");
+        registrationLayout.addRow(2, firstN,firstNameIn);
+
+        //Last Name
+        Label lastN = new Label("Last Name");
+        TextField lastNameIn = new TextField();
+        lastNameIn.setPromptText("Last Name");
+        registrationLayout.addRow(3,lastN,lastNameIn);
+
+        //Password Fields
+        Label pass = new Label("Password: ");
+        TextField passIn = new TextField();
+        passIn.setPromptText("Password");
+        registrationLayout.addRow(4,pass,passIn);
+
+        //Confirm Pass
+        Label cPass = new Label("Re-type Password: ");
+        TextField cPassIn = new TextField();
+        cPassIn.setPromptText("Re-type Password");
+        registrationLayout.addRow(5,cPass,cPassIn);
+
+        //Password Matching Warning
+        Label passWarning = new Label("");
+        registrationLayout.addRow(6,passWarning);
+
+        //Registration Handle Button
+        Button registerButton = new Button("REGISTER");
+        GridPane.setHalignment(registerButton,HPos.RIGHT);
+        GridPane.setValignment(registerButton,VPos.BOTTOM);
+        registerButton.setPadding(new Insets(10,10,10,10));
+        registrationLayout.add(registerButton,0,7);
+        registerButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (!passIn.getText().isEmpty()){
+                    if(passIn.getText().equals(cPassIn.getText())){
+                        String[] userCred = new String[3];
+                        userCred[0] = firstNameIn.getText();
+                        userCred[1] = lastNameIn.getText();
+                        userCred[2] = passIn.getText();
+                        registrationHandle(userCred);
+                    }
+                    else {
+                        passWarning.setText("Please Enter Matching Passwords");
+                    }
+                }
+                else {
+                    passWarning.setText("Please Enter a Password");
+                }
+            }
+        });
+
+        //Setting the scene up
+        Scene registerNow = new Scene(registrationLayout,360,300);
+        UserFloorStage.setScene(registerNow);
+        UserFloorStage.show();
 
     }
+        //Registration handle
+        private void registrationHandle(String[] creds){
+        //Array information - element[0] is First Name and Username, element[1] is last Name, element[2] is Password
+            double userID=0;
+            //Search Algorithm within Database to find out empty Id
+            double i=1; boolean finder = false;
+            while(!finder) {
+                BasicDBObject idSearchQ = new BasicDBObject("_id", i);
+                Cursor C = UsersCollection.find(idSearchQ);
+                if (C.hasNext()) {
+                    i++;
+                }
+                else {
+                    userID = i;
+                    finder = true;
+                }
+            }
 
+            //Inserting the whole object into the database
+            BasicDBObject registerDetails = new BasicDBObject("_id",userID).append("Username",creds[0]).append("Password",creds[2])
+                    .append("First Name",creds[0]).append("Last Name",creds[1]);
+            try{
+                UsersCollection.insert(registerDetails);
+                setUserID(userID);
+            }
+            catch(Exception e){
+                System.out.println("Warning: "+e.getMessage());
+            }
+            System.out.println("Registered Successfully");
+            UserFloorStage.close();
 
+        }
+    //End of Registration
 
     //Mutators
     private void setUsernameIn(String Input) {
