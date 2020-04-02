@@ -14,7 +14,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class User extends Application {
+import static javafx.application.Application.launch;
+
+public class User extends Application{
     //Instances
     private MongoClient mongo = new MongoClient("Localhost", 27017);
     private DB LibraryProject = mongo.getDB("LibraryProject");
@@ -23,19 +25,19 @@ public class User extends Application {
     private String passwordIn;
     Stage UserFloorStage;
     private double userID;
-
+    private String Username;
     //Behaviours
+
+    HomeUI parent = new HomeUI();
+
     public static void main(String[] args){launch(args);}
+
     @Override
-    public void start(Stage primaryStage) {
-        try {
-            UserFloorStage = primaryStage;
-            logInUi();
-        }
-        catch(Exception e){
-            System.out.println("message"+e.getMessage());
-        }
+    public void start(Stage primaryStage){
+        UserFloorStage = primaryStage;
+        logInUi();
     }
+
 
     //Login UI scene
     private GridPane logInLayout = new GridPane();
@@ -99,7 +101,7 @@ public class User extends Application {
     private void logInValidation(ActionEvent event){
         setUsernameIn(userIn.getText());setPasswordIn(passIn.getText());
         if (userExist(getUsernameIn(),getPasswordIn())){
-            UserFloorStage.close();
+            parent.homeInterface(UserFloorStage,User.this);
         }
         else {
           warning.setText("Incorrect Username/Password");
@@ -220,22 +222,21 @@ public class User extends Application {
                     finder = true;
                 }
             }
-
             //Inserting the whole object into the database
             BasicDBObject registerDetails = new BasicDBObject("_id",userID).append("Username",creds[0]).append("Password",creds[2])
                     .append("First Name",creds[0]).append("Last Name",creds[1]);
             try{
                 UsersCollection.insert(registerDetails);
                 setUserID(userID);
+                parent.homeInterface(UserFloorStage,User.this);
             }
             catch(Exception e){
                 System.out.println("Warning: "+e.getMessage());
             }
-            System.out.println("Registered Successfully");
-            UserFloorStage.close();
 
         }
     //End of Registration
+
 
     //Mutators
     private void setUsernameIn(String Input) {
@@ -247,8 +248,18 @@ public class User extends Application {
     private void setUserID(double Input){
         userID = Input;
     }
+    private void setUsername(){
+        BasicDBObject userObject = new BasicDBObject("_id",getUserID());
+        Cursor c = UsersCollection.find(userObject);
+        Username = (String) c.next().get("Username");
+    }
+
 
     //Accessors
+    public String getUsername(){
+        setUsername();
+        return Username;
+    }
     public double getUserID(){
         return userID;
     }
