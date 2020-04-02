@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -26,6 +28,7 @@ public class User extends Application{
     Stage UserFloorStage;
     private double userID;
     private String Username;
+    private int booksOnLoan;
     //Behaviours
 
     HomeUI parent = new HomeUI();
@@ -39,10 +42,10 @@ public class User extends Application{
     }
 
 
+    //Sttart of Login Procedure
     //Login UI scene
     private GridPane logInLayout = new GridPane();
     private Label warning;TextField passIn = new TextField();TextField userIn = new TextField();
-
     public void logInUi(){
         UserFloorStage.setTitle("Log In");
         Scene loggingIn;
@@ -96,7 +99,6 @@ public class User extends Application{
         UserFloorStage.setScene(loggingIn);
         UserFloorStage.show();
     }
-
     //Log In Validation Section -------
     private void logInValidation(ActionEvent event){
         setUsernameIn(userIn.getText());setPasswordIn(passIn.getText());
@@ -237,6 +239,127 @@ public class User extends Application{
         }
     //End of Registration
 
+    //Display Details of User
+    public void userDisplay(Stage primaryStage){
+        Scene detailScene;
+
+        GridPane mainHolder = new GridPane();mainHolder.setPadding(new Insets(25,0,25,25));
+        mainHolder.setHgap(17);mainHolder.setVgap(25);
+
+        //Primary Title
+        Label Title = new Label("Details of your Account");
+        Title.setPadding(new Insets(10,10,10,10));
+        GridPane.setHalignment(Title, HPos.CENTER);Title.setFont(new Font("Calibri",19));
+        mainHolder.add(Title,0,0,2,1);
+
+        //Menu Logo
+        Image logo = new Image(getClass().getResourceAsStream("Menu_logo.png"));
+        ImageView logoD = new ImageView(logo);
+        logoD.setFitHeight(50);logoD.setFitWidth(111);
+        mainHolder.add(logoD,2,0,1,1);
+
+        GridPane innerContent = new GridPane();
+
+        BasicDBObject userDetailFromDB = new BasicDBObject("_id",getUserID());
+        Cursor C = UsersCollection.find(userDetailFromDB);
+        DBObject userInfo = C.next();
+
+        //Label Fname
+        Label fName = new Label("First Name");
+        fName.setPadding(new Insets(7,7,7,7));
+        fName.setFont(new Font("Calibri", 16));
+
+        Label fnameDisplay = new Label((String) userInfo.get("First Name"));
+        fName.setPadding(new Insets(7,7,7,7));
+        fnameDisplay.setFont(new Font("Calibri", 13));
+        innerContent.addRow(0,fName,fnameDisplay);
+
+        //Label lName
+        Label lName = new Label("First Name");
+        lName.setPadding(new Insets(7,7,7,7));
+        lName.setFont(new Font("Calibri", 16));
+
+        Label lnameDisplay = new Label((String) userInfo.get("Last Name"));
+        lName.setPadding(new Insets(7,7,7,7));
+        lnameDisplay.setFont(new Font("Calibri", 13));
+        innerContent.addRow(1,lName,lnameDisplay);
+
+        //Label ID
+        Label id = new Label("ID");
+        id.setPadding(new Insets(7,7,7,7));
+        id.setFont(new Font("Calibri", 16));
+
+        Label idDisplay = new Label(String.valueOf(getUserID()));
+        idDisplay.setPadding(new Insets(7,7,7,7));
+        idDisplay.setFont(new Font("Calibri", 13));
+        innerContent.addRow(2,id,idDisplay);
+
+        //Label booksOnLoan
+        Label onLoan = new Label("Books On Loan: ");
+        onLoan.setPadding(new Insets(7,7,7,7));
+        onLoan.setFont(new Font("Calibri", 16));
+
+
+        TotalBooksOnLoan(getUserID());
+
+
+        Label onLoanD = new Label(Integer.toString(booksOnLoan));
+        onLoanD.setPadding(new Insets(7,7,7,7));
+        onLoanD.setFont(new Font("Calibri", 13));
+        innerContent.addRow(3,onLoan);
+
+        //Go Back button
+        Button goB = new Button("Go Back");
+        GridPane.setHalignment(goB,HPos.CENTER);goB.setFont(new Font("Calibri",13));
+        goB.setPadding(new Insets(5,5,5,5));
+        goB.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                parent.homeInterface(primaryStage,User.this);
+            }
+        });
+
+        //Exit Button
+        Button exit = new Button("Exit");
+        GridPane.setHalignment(exit,HPos.CENTER);exit.setFont(new Font("Calibri",13));
+        exit.setPadding(new Insets(5,5,5,5));
+        exit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);
+            }
+        });
+        innerContent.addRow(4, goB,exit);
+
+
+
+
+        mainHolder.addRow(1,innerContent);
+
+        mainHolder.setStyle("-fx-background-color:white;");
+        detailScene = new Scene (mainHolder,371,280);
+        primaryStage.setTitle("Details");
+        primaryStage.setScene(detailScene);
+        primaryStage.show();
+
+    }
+
+    //Find the total books on loan by a particular user, with User ID
+    private void TotalBooksOnLoan(double userId) {
+        DBCollection LoanCollection = LibraryProject.getCollection("Loan");
+        BasicDBObject LoansUnderID = new BasicDBObject("Student_Id", userId);
+
+
+        Cursor c = LoanCollection.find(LoansUnderID);
+        int i = 0;
+        if (c.hasNext()) {
+            while (c.hasNext()) {
+                c.next();
+                i++;
+            }
+        }
+        booksOnLoan = i;
+    }
 
     //Mutators
     private void setUsernameIn(String Input) {

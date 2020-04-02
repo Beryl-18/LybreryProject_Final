@@ -8,10 +8,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import javax.swing.*;
+
 
 /*
 Things to do ****
@@ -46,11 +48,8 @@ public class HomeUI  {
         logoD.setFitHeight(50);logoD.setFitWidth(111);
         mainHolder.add(logoD,2,0,1,1);
 
-
-
         //Home Primary Action Event Holder
         GridPane actionContainer = new GridPane(); actionContainer.setPadding(new Insets(15,25,15,25));actionContainer.setVgap(20);actionContainer.setHgap(25);
-
 
         //Loan Action
         Button loanAction = new Button("LOAN");
@@ -68,6 +67,7 @@ public class HomeUI  {
         Button detailAction = new Button("DETAILS");
         GridPane.setHalignment(detailAction,HPos.CENTER);detailAction.setFont(new Font("Calibri",13));
         detailAction.setPadding(new Insets(5,5,5,5));
+        detailAction.setOnAction(e -> customer.userDisplay(homeStage));
         actionContainer.add(detailAction,1,2);
 
 
@@ -82,10 +82,12 @@ public class HomeUI  {
         //Log Out Action Button
         Button logOut = new Button("Log Out");
         logOut.setPadding(new Insets(3,3,3,3));logOut.setFont(new Font("Calibri",13));
+        logOut.setPrefWidth(70);
         logOut.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
+                System.exit(0);
             }
         });
 
@@ -99,7 +101,7 @@ public class HomeUI  {
             //Adding Action Center
         mainHolder.add(actionContainer,0,1,2,2);
         mainHolder.setStyle("-fx-background-color:white;");
-        home = new Scene(mainHolder,440,245);
+        home = new Scene(mainHolder,460,245);
         homeStage.setTitle("HOME");
         homeStage.setScene(home);
         homeStage.show();
