@@ -285,7 +285,7 @@ public class User extends Application{
         innerContent.addRow(1,lName,lnameDisplay);
 
         //Label ID
-        Label id = new Label("ID");
+        Label id = new Label("User ID:");
         id.setPadding(new Insets(7,7,7,7));
         id.setFont(new Font("Calibri", 16));
 

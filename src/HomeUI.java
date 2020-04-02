@@ -12,12 +12,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 
 
 /*
 Things to do ****
-- make all buttons disabled, mouse hover - enable property
+- reading Book description from files
 - Add Logos/backgrounds
 - Picture based Display pic for User - figure out storing and retrieving as HIGH PRIORITY
 *****************
@@ -28,6 +27,7 @@ public class HomeUI  {
     Stage homeStage;
     Scene home;
     User customer;
+    BookShelf shelfSearch = new BookShelf();
 
     public void homeInterface(Stage primaryStage, User formUser){
         homeStage = primaryStage;
@@ -56,6 +56,12 @@ public class HomeUI  {
         GridPane.setHalignment(loanAction,HPos.CENTER);loanAction.setFont(new Font("Calibri",13));
         loanAction.setPadding(new Insets(5,5,5,5));
         actionContainer.add(loanAction,0,0);
+        loanAction.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                shelfSearch.searchDisplay(homeStage);
+            }
+        });
 
         //Return Action
         Button returnAction = new Button("RETURN");
