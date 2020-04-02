@@ -8,15 +8,13 @@ import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import static javafx.application.Application.launch;
 
 public class User extends Application{
     //Instances
@@ -335,7 +333,8 @@ public class User extends Application{
 
 
         mainHolder.addRow(1,innerContent);
-
+        RadioButton radiotest = new RadioButton("123");
+        mainHolder.addRow(2, radiotest);
         mainHolder.setStyle("-fx-background-color:white;");
         detailScene = new Scene (mainHolder,371,280);
         primaryStage.setTitle("Details");
