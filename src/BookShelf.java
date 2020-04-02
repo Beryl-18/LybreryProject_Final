@@ -4,10 +4,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -111,14 +108,14 @@ public class BookShelf {
         mainHolder.add(container,0,2,2,1);
 
         mainHolder.setVgap(10);
+        mainHolder.setStyle("-fx-background-color:white;");
         bookDisplay = new Scene(mainHolder,805,355);
         primaryStage.setTitle("Search");
         primaryStage.setScene(bookDisplay);
 
     }
 
-    public void displayBooks(Stage primaryStage, String category)
-    {
+    public void displayBooks(Stage primaryStage, String category) {
         GridPane mainHolder = new GridPane();mainHolder.setPadding(new Insets(25,0,25,25));
         mainHolder.setHgap(17);mainHolder.setVgap(25);
         Scene booksAvailable;
@@ -136,8 +133,17 @@ public class BookShelf {
         mainHolder.add(logoD,2,0,1,1);
 
 
+        //ScrollPane holdng Inner container
+        ScrollPane innerHolder = new ScrollPane();
         //Gridpane Inner Container
         GridPane container = new GridPane(); container.setPadding(new Insets(13,13,13,13));
+        innerHolder.setContent(container);
+        //width410,H195
+        innerHolder.setPrefWidth(438);
+        innerHolder.setPrefHeight(195);
+        innerHolder.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        innerHolder.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
 
         //Getting the books from the database
         BasicDBObject booksInCat = new BasicDBObject("Category",category);
@@ -166,39 +172,40 @@ public class BookShelf {
 
         ToggleGroup idGroup = new ToggleGroup();
         int i = 3;
-        while(c.hasNext()){
+        while(c.hasNext()) {
             DBObject individualBook = c.next();
 
             //Each Item being displayed as Label
             //RadioButton'ed ID
+            //required conversions, as ID isn't showing up otherwise.
             double idnumber = (double) individualBook.get("_id");
             String idconverted = String.valueOf(idnumber);
+
             RadioButton id = new RadioButton(idconverted);
             id.setPadding(new Insets(5,5,5,5));
             container.add(id,0,i);
             id.setToggleGroup(idGroup);
 
             //Bookname
-            Label bookName = new Label ((String) individualBook.get("BookName"));
-            bookName.setPadding(new Insets(10,10,10,10));
-            bookName.setFont(new Font("Calibri",11));
-            container.add(bookName,1,i);
+            Label bookName = new Label((String) individualBook.get("BookName"));
+            bookName.setPadding(new Insets(10, 10, 10, 10));
+            bookName.setFont(new Font("Calibri", 11));
+            container.add(bookName, 1, i);
 
             //Loan Status
             Label loanStatus;
-            if (!OnLoan((double)individualBook.get("_id"))) {
+            if (!OnLoan((double) individualBook.get("_id"))) {
                 loanStatus = new Label("Available");
-            }
-            else {
+            } else {
                 loanStatus = new Label("UnAvailable");
                 id.setDisable(true);
             }
 
-            loanStatus.setPadding(new Insets(10,10,10,10));
-            loanStatus.setFont(new Font("Calibri",11));
-            container.add(loanStatus,2,i);
+            loanStatus.setPadding(new Insets(10, 10, 10, 10));
+            loanStatus.setFont(new Font("Calibri", 11));
+            container.add(loanStatus, 2, i);
             i++;
-
+        }
 
             //Bottom Container - Go Back and Exit buttons
             Button goB = new Button("Go Back");
@@ -224,13 +231,14 @@ public class BookShelf {
 
             mainHolder.add(goB,0,3);
             mainHolder.add(exit,1,3);
-            mainHolder.add(container,0,2,2,1);
+            mainHolder.add(innerHolder,0,2,2,1);
+            mainHolder.setStyle("-fx-background-color:white;");
 
+            booksAvailable = new Scene(mainHolder,605,380);
 
-            booksAvailable = new Scene(mainHolder,520,340);
             primaryStage.setTitle("Search");
             primaryStage.setScene(booksAvailable);
-        }
+
 
 
     }
