@@ -3,6 +3,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -16,8 +17,12 @@ public class BookShelf {
     private  DB dbs = mc.getDB("LibraryProject");
     private  DBCollection BookCollection = dbs.getCollection("BookShelf");
     private  DBCollection LoanCollection = dbs.getCollection("Loan");
-
-    public void searchDisplay(Stage primaryStage){
+    private User userDetails;
+    private String userSelectCat;
+    private Stage bookShelfUI;
+    public void searchDisplay(Stage primaryStage, User formofUser){
+        bookShelfUI = primaryStage;
+        userDetails = formofUser;
         Scene bookDisplay;
 
         GridPane mainHolder = new GridPane();mainHolder.setPadding(new Insets(25,0,25,25));
@@ -57,7 +62,8 @@ public class BookShelf {
         csA.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                displayBooks(primaryStage,"Computer Science");
+                setUserSelectCat("Computer Science");
+                displayBooks(primaryStage,getUserSelectCat());
             }
         });
 
@@ -71,7 +77,8 @@ public class BookShelf {
         lA.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                displayBooks(primaryStage,"Law");
+                setUserSelectCat("Law");
+                displayBooks(primaryStage,getUserSelectCat());
             }
         });
 
@@ -85,7 +92,8 @@ public class BookShelf {
         hA.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                displayBooks(primaryStage,"History");
+                setUserSelectCat("History");
+                displayBooks(primaryStage,getUserSelectCat());
             }
         });
 
@@ -99,7 +107,8 @@ public class BookShelf {
         bA.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                displayBooks(primaryStage,"Business");
+                setUserSelectCat("Business");
+                displayBooks(primaryStage,getUserSelectCat());
             }
         });
 
@@ -214,12 +223,12 @@ public class BookShelf {
             goB.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    searchDisplay(primaryStage);
+                    searchDisplay(primaryStage,userDetails);
                 }
             });
 
             Button exit = new Button("Exit");
-            GridPane.setHalignment(goB,HPos.CENTER);goB.setFont(new Font("Calibri",13));
+            GridPane.setHalignment(exit,HPos.CENTER);exit.setFont(new Font("Calibri",13));
             exit.setPadding(new Insets(5,5,5,5));
             exit.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -228,9 +237,22 @@ public class BookShelf {
                 }
             });
 
+            //Loan Button
+            Button loan = new Button("Loan");
+            GridPane.setHalignment(loan,HPos.CENTER);loan.setFont(new Font("Calibri",13));
+            loan.setPadding(new Insets(5,5,5,5));
+            loan.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    RadioButton selectedButton = (RadioButton) idGroup.getSelectedToggle();
+                    takeLoan(Double.parseDouble(selectedButton.getText()));
+                }
+            });
+
 
             mainHolder.add(goB,0,3);
-            mainHolder.add(exit,1,3);
+            mainHolder.add(loan,1,3);
+            mainHolder.add(exit,2,3);
             mainHolder.add(innerHolder,0,2,2,1);
             mainHolder.setStyle("-fx-background-color:white;");
 
@@ -250,5 +272,47 @@ public class BookShelf {
 
     }
 
+    private void takeLoan(double bookId){
+        try {
+            //Allowing loan, create record of loan in the Loan Collection
+            BasicDBObject LoanDetails = new BasicDBObject();
+            LoanDetails.put("Book_id", bookId);
+            LoanDetails.put("Student_Id", userDetails.getUserID());
+            LoanCollection.insert(LoanDetails);
+
+            //Setting up a new stage to alert the user of the loan
+            Stage loanAlert = new Stage();
+            GridPane miniPane = new GridPane();
+
+            Label message = new Label("Book Id: "+bookId+" is now on Loan");
+            message.setPadding(new Insets(24,24,24,24));
+            message.setFont(new Font("Calibri",20));
+            GridPane.setHalignment(message,HPos.CENTER);
+            GridPane.setValignment(message, VPos.CENTER);
+            miniPane.add(message,0,0);
+            Scene messageAlert = new Scene(miniPane,301,112);
+
+            loanAlert.setScene(messageAlert);
+            loanAlert.setTitle("Loan Alert");
+            loanAlert.show();
+            bookShelfUI.close();
+            loanAlert.toFront();
+
+
+
+        }
+        catch(Exception e){
+            System.out.println("error"+e.getMessage());
+        }
+
+
+    }
+
+    public void setUserSelectCat(String input){
+        userSelectCat = input;
+    }
+    public String getUserSelectCat(){
+        return userSelectCat;
+    }
 
 }

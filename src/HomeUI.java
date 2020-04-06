@@ -1,4 +1,3 @@
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -17,6 +16,7 @@ import javafx.stage.Stage;
 /*
 Things to do ****
 - reading Book description from files
+- button - mouse over feature - to change color - especially log off button & the Categories buttons
 - Add Logos/backgrounds
 - Picture based Display pic for User - figure out storing and retrieving as HIGH PRIORITY
 *****************
@@ -59,7 +59,7 @@ public class HomeUI  {
         loanAction.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                shelfSearch.searchDisplay(homeStage);
+                shelfSearch.searchDisplay(homeStage, formUser);
             }
         });
 
@@ -68,6 +68,7 @@ public class HomeUI  {
         GridPane.setHalignment(returnAction,HPos.CENTER);returnAction.setFont(new Font("Calibri",13));
         returnAction.setPadding(new Insets(5,5,5,5));
         actionContainer.add(returnAction,2,0);
+        //remember to send the USERform class, when inserting action
 
         //Detail Action
         Button detailAction = new Button("DETAILS");
@@ -96,9 +97,7 @@ public class HomeUI  {
                 System.exit(0);
             }
         });
-
         userContainer.addRow(2,logOut);
-
 
         //Adding All sub containers to main Holder
             //Adding User Information - Right Bar
