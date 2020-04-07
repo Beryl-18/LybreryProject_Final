@@ -1,0 +1,11 @@
+1.0
+Computer programming is a skill that can bring great enjoyment from the creativity involved in designing and implementing a solution to a problem. This classroom-tested and easy-to-follow textbook teaches the reader how to program using Python, an accessible language which can be learned incrementally. Through an extensive use of examples and practical exercises, students will learn to recognize and apply abstract patterns in programming, as well as how to inspect the state of a program using a debugger tool.
+
+6.0
+This is going to be a completely random abstract for id
+
+7.0
+This is the description for 7.0
+
+8.0
+This is totally the description for 8.0

@@ -27,8 +27,8 @@ public class User extends Application{
     private double userID;
     private String Username;
     private double booksOnLoan;
-    //Behaviours
 
+    //Behaviours
     HomeUI parent = new HomeUI();
 
     public static void main(String[] args){launch(args);}
@@ -40,7 +40,7 @@ public class User extends Application{
     }
 
 
-    //Sttart of Login Procedure
+    //Start of Login Procedure
     //Login UI scene
     private GridPane logInLayout = new GridPane();
     private Label warning;
@@ -57,7 +57,7 @@ public class User extends Application{
         //Title Text
         Label Title = new Label("Please Log In to Continue");
         Title.setFont(new Font("Calibri",18));
-//        GridPane.setHalignment(Title, HPos.CENTER);
+        GridPane.setHalignment(Title, HPos.CENTER);
         logInLayout.add(Title,1,0,2,1);
 
         //Username Text
