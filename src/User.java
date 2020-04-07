@@ -8,7 +8,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,7 +26,7 @@ public class User extends Application{
     Stage UserFloorStage;
     private double userID;
     private String Username;
-    private int booksOnLoan;
+    private double booksOnLoan;
     //Behaviours
 
     HomeUI parent = new HomeUI();
@@ -43,7 +43,8 @@ public class User extends Application{
     //Sttart of Login Procedure
     //Login UI scene
     private GridPane logInLayout = new GridPane();
-    private Label warning;TextField passIn = new TextField();TextField userIn = new TextField();
+    private Label warning;
+    PasswordField passIn = new PasswordField();TextField userIn = new TextField();
     public void logInUi(){
         UserFloorStage.setTitle("Log In");
         Scene loggingIn;
@@ -72,7 +73,6 @@ public class User extends Application{
         logInLayout.add(passText, 0, 4);
 
         //Password TextField
-
         passIn.setPromptText("Password");
         logInLayout.add(passIn,1,4);
 
@@ -205,8 +205,9 @@ public class User extends Application{
         UserFloorStage.show();
 
     }
-        //Registration handle
-        private void registrationHandle(String[] creds){
+
+    //Registration Handle
+    private void registrationHandle(String[] creds){
         //Array information - element[0] is First Name and Username, element[1] is last Name, element[2] is Password
             double userID=0;
             //Search Algorithm within Database to find out empty Id
@@ -294,17 +295,14 @@ public class User extends Application{
 
         //Label booksOnLoan
         Label onLoan = new Label("Books On Loan: ");
-        onLoan.setPadding(new Insets(7,7,7,7));
+        onLoan.setPadding(new Insets(7,7,14,7));
         onLoan.setFont(new Font("Calibri", 16));
 
-
         TotalBooksOnLoan(getUserID());
-
-
-        Label onLoanD = new Label(Integer.toString(booksOnLoan));
-        onLoanD.setPadding(new Insets(7,7,7,7));
+        Label onLoanD = new Label(String.valueOf(booksOnLoan));
+        onLoanD.setPadding(new Insets(7,7,14,7));
         onLoanD.setFont(new Font("Calibri", 13));
-        innerContent.addRow(3,onLoan);
+        innerContent.addRow(3,onLoan,onLoanD);
 
         //Go Back button
         Button goB = new Button("Go Back");
@@ -333,8 +331,6 @@ public class User extends Application{
 
 
         mainHolder.addRow(1,innerContent);
-        RadioButton radiotest = new RadioButton("123");
-        mainHolder.addRow(2, radiotest);
         mainHolder.setStyle("-fx-background-color:white;");
         detailScene = new Scene (mainHolder,371,280);
         primaryStage.setTitle("Details");
@@ -350,13 +346,13 @@ public class User extends Application{
 
 
         Cursor c = LoanCollection.find(LoansUnderID);
-        int i = 0;
-        if (c.hasNext()) {
-            while (c.hasNext()) {
+        double i = 0;
+
+            for(i=0;c.hasNext();i++){
                 c.next();
                 i++;
             }
-        }
+
         booksOnLoan = i;
     }
 

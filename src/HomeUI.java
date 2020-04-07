@@ -12,17 +12,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
-
-/*
-Things to do ****
-- reading Book description from files
-- button - mouse over feature - to change color - especially log off button & the Categories buttons
-- Add Logos/backgrounds
-- Picture based Display pic for User - figure out storing and retrieving as HIGH PRIORITY
-*****************
- */
-
-
 public class HomeUI  {
     Stage homeStage;
     Scene home;
@@ -59,7 +48,7 @@ public class HomeUI  {
         loanAction.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                shelfSearch.searchDisplay(homeStage, formUser);
+                shelfSearch.searchDisplay(homeStage, formUser,HomeUI.this);
             }
         });
 
@@ -68,6 +57,12 @@ public class HomeUI  {
         GridPane.setHalignment(returnAction,HPos.CENTER);returnAction.setFont(new Font("Calibri",13));
         returnAction.setPadding(new Insets(5,5,5,5));
         actionContainer.add(returnAction,2,0);
+        returnAction.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                shelfSearch.bookReturn(homeStage, formUser,HomeUI.this);
+            }
+        });
         //remember to send the USERform class, when inserting action
 
         //Detail Action
