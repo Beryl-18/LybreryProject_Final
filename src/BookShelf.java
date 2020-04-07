@@ -375,7 +375,7 @@ public class BookShelf {
              receiptHolder.addRow(2,userInfoContainer);
 
 
-            Scene loanInformation = new Scene(receiptHolder,268,285);
+            Scene loanInformation = new Scene(receiptHolder,377,304);
             loanReceipt.setScene(loanInformation);
             loanReceipt.setTitle("Loan Receipt");
             searchDisplay(bookShelfUI,userDetails,menuform);
@@ -394,6 +394,7 @@ public class BookShelf {
     public void bookReturn(Stage primaryStage, User formOfUser, HomeUI homeForm){
         //UI to Return the Books Loaned by User
         bookShelfUI = primaryStage; userDetails = formOfUser;
+        menuform = homeForm;
         GridPane mainHolder = new GridPane();mainHolder.setPadding(new Insets(25,0,25,25));
         mainHolder.setHgap(17);mainHolder.setVgap(25);
         Scene booksAvailable;
@@ -502,36 +503,118 @@ public class BookShelf {
         });
 
         //Return Button
-
         Button bookReturn = new Button("Return");
         GridPane.setHalignment(bookReturn,HPos.CENTER);bookReturn.setFont(new Font("Calibri",13));
         bookReturn.setPadding(new Insets(5,5,5,5));
-        /*bookReturn.setOnAction(new EventHandler<ActionEvent>() {
+        bookReturn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                RadioButton selectedButton = (RadioButton) idGroup.getSelectedToggle();
-                takeLoan(Double.parseDouble(selectedButton.getText()));
+                RadioButton selectedbutton = (RadioButton) idGroup.getSelectedToggle();
+                returnGui(Double.parseDouble(selectedbutton.getText()));
             }
         });
-         */
 
-
-
-
+        //adding everything to the mainholder
         mainHolder.add(goB,0,3);
         mainHolder.add(bookReturn,1,3);
         mainHolder.add(exit,2,3);
         mainHolder.add(innerHolder,0,2,2,1);
         mainHolder.setStyle("-fx-background-color:white;");
-
         booksAvailable = new Scene(mainHolder,605,380);
 
-        bookShelfUI.setTitle("Search");
+        bookShelfUI.setTitle("Return A Book");
         bookShelfUI.setScene(booksAvailable);
-
     }
 
+    private void returnGui(double book_Id){
+        try {
+            //Allowing loan, create record of loan in the Loan Collection
+            BasicDBObject returnDetails = new BasicDBObject();
+            returnDetails.put("Book_id", book_Id);
+            returnDetails.put("Student_Id", userDetails.getUserID());
+            LoanCollection.remove(returnDetails);
 
+            //Setting up a new stage to alert the user of the loan
+            Stage returnReceipt = new Stage();
+
+            //Receipt Mainholder Pane
+            GridPane receiptHolder = new GridPane();
+            receiptHolder.setVgap(25);
+
+            Label LoanTitle = new Label("Return Receipt");
+            LoanTitle.setPadding(new Insets(10,10,10,10));
+            LoanTitle.setFont(new Font("Calibri",18));
+            GridPane.setValignment(LoanTitle,VPos.CENTER);GridPane.setHalignment(LoanTitle, HPos.CENTER);
+
+            receiptHolder.add(LoanTitle,0,0);
+
+            //Top half - Loaned Book information
+            GridPane bookcontent = new GridPane();bookcontent.setVgap(7);bookcontent.setHgap(7);
+
+            //Labels containing Book details
+            Label bookIDLabel = new Label("Book ID:");
+            bookIDLabel.setPadding(new Insets(10,10,10,10));
+            bookIDLabel.setFont(new Font("Calibri",15));
+
+            Label bookID = new Label(String.valueOf(book_Id));
+            bookID.setPadding(new Insets(10,10,10,10));
+            bookID.setFont(new Font("Calibri",13));
+
+            Label bookNameLabel = new Label("Book Name: ");
+            bookNameLabel.setPadding(new Insets(10,10,10,10));
+            bookNameLabel.setFont(new Font("Calibri",15));
+
+            //retrieving the book name from database & Setting the label to the name
+            BasicDBObject bookSearch = new BasicDBObject("_id",book_Id);
+            Cursor C = BookCollection.find(bookSearch);
+            DBObject bookObject = C.next();
+
+            Label bookName = new Label((String) bookObject.get("BookName"));
+            bookName.setPadding(new Insets(10,10,10,10));
+            bookName.setFont(new Font("Calibri",13));
+
+            bookcontent.addRow(0,bookIDLabel,bookID);
+            bookcontent.addRow(1,bookNameLabel,bookName);
+
+            //Bottom half - User Information
+            GridPane userInfoContainer = new GridPane(); userInfoContainer.setHgap(7);userInfoContainer.setHgap(7);
+
+            //Labels Containing User information
+            Label userIDLabel = new Label("User ID:");
+            userIDLabel.setPadding(new Insets(10,10,10,10));
+            userIDLabel.setFont(new Font("Calibri",15));
+
+            Label userID = new Label(String.valueOf(userDetails.getUserID()));
+            userID.setPadding(new Insets(10,10,10,10));
+            userID.setFont(new Font("Calibri",13));
+
+            Label userNameLabel = new Label("User Name: ");
+            userNameLabel.setPadding(new Insets(10,10,10,10));
+            userNameLabel.setFont(new Font("Calibri",15));
+
+            Label userName = new Label(userDetails.getUsername());
+            userName.setPadding(new Insets(10,10,10,10));
+            userName.setFont(new Font("Calibri",13));
+
+            userInfoContainer.addRow(0,userIDLabel,userID);
+            userInfoContainer.addRow(1,userNameLabel,userName);
+
+            receiptHolder.addRow(1,bookcontent);
+            receiptHolder.addRow(2,userInfoContainer);
+
+
+            Scene returnInformation = new Scene(receiptHolder,358,325);
+            returnReceipt.setScene(returnInformation);
+            returnReceipt.setTitle("Return Receipt");
+            menuform.homeInterface(bookShelfUI,userDetails);
+            returnReceipt.show();
+            returnReceipt.toFront();
+        }
+        catch(Exception e){
+            System.exit(0);
+            System.out.println("error "+e.getMessage());
+        }
+    }
     public void setUserSelectCat(String input){
         userSelectCat = input;
     }
