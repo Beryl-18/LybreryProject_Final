@@ -1,11 +1,29 @@
 1.0
 Computer programming is a skill that can bring great enjoyment from the creativity involved in designing and implementing a solution to a problem. This classroom-tested and easy-to-follow textbook teaches the reader how to program using Python, an accessible language which can be learned incrementally. Through an extensive use of examples and practical exercises, students will learn to recognize and apply abstract patterns in programming, as well as how to inspect the state of a program using a debugger tool.
 
+2.0
+Manage your data with a system designed to support modern application development. Updated for MongoDB 4.2, the third edition of this authoritative and accessible guide shows you the advantages of using document-oriented databases. You’ll learn how this secure, high-performance system enables flexible data models, high availability, and horizontal scalability.
+
+3.0
+This text is intended for a 1-, 2-, or 3-semester CS1 course sequence. Daniel Liang teaches concepts of problem-solving and object-oriented programming using a fundamentals-first approach. Beginning programmers learn critical problem-solving techniques then move on to grasp the key concepts of object-oriented, GUI programming, advanced GUI and Web programming using Java.
+
+4.0
+The computing world today is in the middle of a revolution: mobile clients and cloud computing have emerged as the dominant paradigms driving programming and hardware innovation today. The Fifth Edition of Computer Architecture focuses on this dramatic shift, exploring the ways in which software and technology in the cloud are accessed by cell phones, tablets, laptops, and other mobile computing devices.
+
+5.0
+Fifty years on from its original publication, HLA Hart's The Concept of Law is widely recognized as the most important work of legal philosophy published in the twentieth century, and remains the starting point for most students coming to the subject for the first time.In this third edition, Leslie Green provides a new introduction that sets the book in the context of subsequent developments in social and political philosophy, clarifying misunderstandings of Hart's project and highlighting central tensions and problems in the work.
+
 6.0
-This is going to be a completely random abstract for id
+The reader is invited to follow a route that visits Fish's view of theory and practice,Raz's legal reasoning thesis, theoretical models of judicial review, Dworkin's right answer thesis, the law of the excluded middle and Lukasiewicz's development of three-valued logic, Wittgenstein's language games, and Moore's metaphysical realism. The destination is the practice at the heart of legal reasoning.
 
 7.0
-This is the description for 7.0
+With its clear and entertaining writing style, Understanding Jurisprudence is the perfect guide for students new to legal theory and looking for an accessible introduction to the subject.Key theories and theorists are introduced in a compact and easy-to-read format, offering an engaging account of the central ideas without oversimplification. Key quotes from leading scholars are included throughout the text, introducing you to their work and its impact on legal philosophy, while further reading suggestions help you to navigate the broad range of literature available in this area.
 
 8.0
-This is totally the description for 8.0
+The Story of Art, one of the most famous and popular books on art ever written, has been a world bestseller for over half a century. Attracted by the simplicity and clarity of his writing, readers of all ages and backgrounds have found in Professor Gombrich a true master, who combines knowledge and wisdom with a unique gift for communicating his deep love of the subject.
+
+9.0
+This book is born from the solid conviction that one cannot understand the contemporary period without analyzing the profound upheavals which the development of capitalism has brought about in societies throughout the world. It is born also from a desire to understand the various aspects of this development: simultaneously - economic and political and ideological, national and multinational, liberating and oppressive, destructive and creative.
+
+10.0
+Core Concepts of Management takes a streamlined approach that focuses on fundamentals and leaves room for additional content. With Wiley's Business Extra Select program, Instructors can build on the core text by adding articles, cases, and readings from such leading business resources as INSEAD, Ivey and Harvard Business School Cases, Fortune, The Economist, The Wall Street Journal, and more. In addition, Instructors can select a pre-built Business Extra Select CoursePack, or create their own CoursePack from the thousands of articles and cases in the Business Extra Select database.
